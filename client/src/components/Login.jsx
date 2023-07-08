@@ -1,22 +1,16 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "../api/axios";
+import { Link } from "react-router-dom";
+import useAuthContext from "../context/AuthContext";
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, SetPassword] = useState("");
-    const navigate = useNavigate();
+    const {login, errors} = useAuthContext();
+
 
     const handleLogin = async (event) => {
         event.preventDefault();
-        try{
-            await axios.post('/login', {email, password});
-            setEmail("");
-            SetPassword("");
-            navigate("/");
-        } catch(e){
-            console.log(e);
-        }
+        login({email, password});
     };
 
     return <section className="bg-[#F4F7FF] py-20 lg:py-[120px]">
@@ -60,9 +54,12 @@ const Login = () => {
                                 focus-visible:shadow-none
                                 "
                                 />
+                                {errors.email && 
                                 <div className="flex">
-                                    <span className="text-red-400 text-sm m-2 p-2">error</span>
-                                </div>
+                                    <span className="text-red-400 text-sm m-2 p-2">
+                                        {errors.email[0]}
+                                    </span>
+                                </div>}
                             </div>
                             <div className="mb-4">
                                 <input
@@ -85,9 +82,12 @@ const Login = () => {
                                 focus-visible:shadow-none
                                 "
                                 />
+                                {errors.password &&
                                 <div className="flex">
-                                    <span className="text-red-400 text-sm m-2 p-2">error</span>
-                                </div>
+                                    <span className="text-red-400 text-sm m-2 p-2">
+                                        {errors.password[0]}
+                                    </span>
+                                </div>}
                             </div>
                             <div className="mb-10">
                                 <button

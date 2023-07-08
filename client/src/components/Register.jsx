@@ -1,27 +1,19 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "../api/axios";
+import { Link } from "react-router-dom";
+import useAuthContext from "../context/AuthContext";
+
 const Register = () => {
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, SetPassword] = useState("");
     const [password_confirmation, SetPasswordConfirmation] = useState("");
-    const navigate = useNavigate();
+    const {register, errors} = useAuthContext();
+
 
     const handleRegister = async (event) => {
         event.preventDefault();
-
-        try{
-            await axios.post('/register', {name, email, password, password_confirmation});
-            setEmail("");
-            SetPassword("");
-            setName("");
-            SetPasswordConfirmation("");
-            navigate("/");
-        } catch(e){
-            console.log(e);
-        }
+        register({name, email, password, password_confirmation});
     }
 
     return <section className="bg-[#F4F7FF] py-20 lg:py-[120px]">
@@ -65,9 +57,12 @@ const Register = () => {
                             focus-visible:shadow-none
                             "
                             />
-                            <div className="flex">
-                                <span className="text-red-400 text-sm m-2 p-2">error</span>
-                            </div>
+                            {errors.name && 
+                                <div className="flex">
+                                    <span className="text-red-400 text-sm m-2 p-2">
+                                        {errors.name[0]}
+                                    </span>
+                                </div>}
                         </div>
                         <div className="mb-4">
                             <input
@@ -90,9 +85,12 @@ const Register = () => {
                             focus-visible:shadow-none
                             "
                             />
-                            <div className="flex">
-                                <span className="text-red-400 text-sm m-2 p-2">error</span>
-                            </div>
+                            {errors.email && 
+                                <div className="flex">
+                                    <span className="text-red-400 text-sm m-2 p-2">
+                                        {errors.email[0]}
+                                    </span>
+                                </div>}
                         </div>
                         <div className="mb-4">
                             <input
@@ -115,9 +113,12 @@ const Register = () => {
                             focus-visible:shadow-none
                             "
                             />
-                            <div className="flex">
-                                <span className="text-red-400 text-sm m-2 p-2">error</span>
-                            </div>
+                            {errors.password && 
+                                <div className="flex">
+                                    <span className="text-red-400 text-sm m-2 p-2">
+                                        {errors.password[0]}
+                                    </span>
+                                </div>}
                         </div>
                         <div className="mb-4">
                             <input
@@ -139,10 +140,7 @@ const Register = () => {
                             focus:border-primary
                             focus-visible:shadow-none
                             "
-                            />
-                            <div className="flex">
-                                <span className="text-red-400 text-sm m-2 p-2">error</span>
-                            </div>
+                            />                         
                         </div>
                         <div className="mb-10">
                             <button
